@@ -6,11 +6,11 @@ settings:
 
 dependencies:
   '@keystonehq/hw-app-eth':
-    specifier: ^0.0.7
-    version: 0.0.7
+    specifier: latest
+    version: 0.1.2
   '@keystonehq/hw-transport-webusb':
-    specifier: ^0.0.6
-    version: 0.0.6
+    specifier: latest
+    version: 0.1.3
 
 devDependencies:
   parcel-bundler:
@@ -1270,16 +1270,10 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@keystonehq/hw-app-eth@0.0.7:
-    resolution: {integrity: sha512-dwCt1PzhDSlqE1zS91SLQdIu8sIPapEp44750+jOZ5KSl2KP0+tYu+SspEtQ4/PcXFbp5nbAUd0+wVhzF7TrPw==}
+  /@keystonehq/hw-app-eth@0.1.2:
+    resolution: {integrity: sha512-z5O1RqNohRWD4mFB16mRHjhuW70UkZ+zxTjxW3h3HyARgZIghFvSEPprVUjaHPIdAs+KUBkPYXGwa20Wkt6EOw==}
     dependencies:
       '@keystonehq/hw-transport-webusb': 0.1.3
-      buffer: 6.0.3
-    dev: false
-
-  /@keystonehq/hw-transport-webusb@0.0.6:
-    resolution: {integrity: sha512-buD3OTnZuR2QgrSBGo0qHvekBUMn3aSFhwzlkArcbuVG4fDkzDqUk1BHRMeEeWkJaPiga5LsoUE3RUhxjI7BDg==}
-    dependencies:
       buffer: 6.0.3
     dev: false
 
