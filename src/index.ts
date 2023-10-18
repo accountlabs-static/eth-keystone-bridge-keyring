@@ -1,9 +1,3 @@
-window.addEventListener('message', function(event) {
-  if (event.data?.target === 'keystone3') {
-    console.log('Received message:', event.data);
+import { requestHandler as rabbyRequestHandler } from './rabby/request-handler';
 
-    const encodedData = btoa(JSON.stringify(event.data));
-
-    event.source?.postMessage(encodedData, event.origin as any);
-  }
-});
+window.addEventListener('message', rabbyRequestHandler);
