@@ -1,5 +1,5 @@
 import fetchTransport, {
-  isSupported,
+  isSupported, getKeystoneDevices,
 } from '@keystonehq/hw-transport-webusb';
 import Eth, { HDPathType } from '@keystonehq/hw-app-eth';
 
@@ -19,11 +19,18 @@ let hdInstance: Eth | null = null;
 const isSupportUSB = async () => isSupported().catch(() => false);
 
 const initHDInstanceIfNeed = async () => {
-  await isSupportUSB();
-  if (!hdInstance) {
-    const transport = await fetchTransport();
-    const eth = new Eth(transport);
-    hdInstance = eth;
+  try {
+    await isSupportUSB();
+    if (!hdInstance) {
+      // const transport = await fetchTransport();
+      const devices = await getKeystoneDevices();
+      debugger
+      return;
+      const eth = new Eth(transport);
+      hdInstance = eth;
+    }
+  } catch (err) {
+    throw err;
   }
 }
 
@@ -42,31 +49,32 @@ const signTransactionFromHD = async (ur: string) => {
 
 export const requestHandler = async (event: MessageEvent<IData>) => {
   if (event.data?.target === 'rabby-keystone') {
-    const response: IResponse = {
-      success: false,
-      payload: 'unknown action',
-    };
-    switch (event.data.action) {
-      case 'GET_ADDRESS_FROM_HD': {
-        const result = await getAddressesFromHD(event.data?.payload).catch((err) => {
-          response.payload = err?.message;
-        });
-        response.success = true;
-        response.payload = result;
-        break;
+    try {
+      const response: IResponse = {
+        success: true,
+        payload: '',
+      };
+      switch (event.data.action) {
+        case 'GET_ADDRESS_FROM_HD': {
+          const result = await getAddressesFromHD(event.data?.payload);
+          response.payload = result;
+          break;
+        }
+        case 'SIGN_TRANSACTION_FROM_HD': {
+          const result = await signTransactionFromHD(event.data?.payload);
+          response.payload = result;
+          break;
+        }
+        default:
+          break;
       }
-      case 'SIGN_TRANSACTION_FROM_HD': {
-        const result = await signTransactionFromHD(event.data?.payload).catch((err) => {
-          response.payload = err?.message;
-        });
-        response.success = true;
-        response.payload = result;
-        break;
-      }
-      default:
-        break;
-    }
 
-    event.source?.postMessage(response, event.origin as any);
+      event.source?.postMessage(response, event.origin as any);
+    } catch (error: any) {
+      event.source?.postMessage({
+        success: false,
+        payload: error?.message ?? 'Unknown error',
+      }, event.origin as any);
+    }
   }
 }
